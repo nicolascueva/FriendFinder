@@ -211,15 +211,10 @@
 
 
 <script type="text/javascript">
-    // In this code below we create the Front-end JavaScript which "POSTS" our form data to our express server.
-    // In essence, when the user hits submit, jQuery grabs all of the fields then sends a post request to our api
-    // Our api recognizes the route (/api/tables)... and then runs the associated code (found in api-routes.js).
-    // In this case the associated code "saves" the data to the table-data.js file or waitinglist-data.js file
 
     $(".submit").on("click", function (event) {
         event.preventDefault();
-
-        // Here we grab the form elements
+        // loop through .scores to parseInt them
         var scoreArray = [];
         var scores = $(".scores");
         for (let index = 0; index < scores.length; index++) {
@@ -228,40 +223,38 @@
             scoreArray.push(parseInt($(score).val()))
 
         }
-        // scoreArray.push($(".scores").val().trim());
+
         var newFriend = {
             name: $("#name").val().trim(),
             photo: $("#photo_link").val().trim(),
             scores: scoreArray
-            ////
-            /* scores: [$(".question1").val().trim(),
-             $(".question2").val().trim(),
-             $(".question3").val().trim()]*/
-
         };
+
 
         console.log(newFriend);
 
         $.post("/api/friends", newFriend,
             function (data) {
 
-                // If a table is available... tell user they are booked.
+
                 if (data) {
                     console.log(newFriend);
                     console.log(data);
-                    console.log("Yay! You are officially added!");
+                    console.log("New friend successfully added");
 
                 }
-
-                // If a table is available... tell user they on the waiting list.
                 else {
-                    alert("Sorry you are on the wait list");
+                    alert("Please try your information again");
                 }
 
                 // Clear the form when submitting
                 $("#name").val("");
                 $("#photo_link").val("");
                 $(".scores").val("");
+
+                /* Pseudocode: Need to loop through the scoreArray of the new user and every user in the API. Comparing the value in each place.
+                Maybe push the absolute values to a new array? Somehow compare the new arrays or just the end value and select the one with the least difference.
+                Then I imagine we need to select the object that that least difference array belongs to and post the name and picture to the page in the modal.*/
 
 
             });
